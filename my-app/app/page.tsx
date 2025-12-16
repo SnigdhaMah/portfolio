@@ -2,40 +2,24 @@
 
 import "./page.css";
 import { useState } from "react";
-import { Star, Github, Linkedin } from "@deemlol/next-icons";
+import * as IconLib from "@deemlol/next-icons";
+import { allTags, experiences } from "./data";
 
 export default function Home() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const experiences = [
-    {
-      id: 1,
-      title: "SWE Intern @ ServiceNow",
-      period: "Jun - Sept 2025",
-      tags: ["Full-Stack", "Internship", "Security"],
-      repoUrl: "#",
-    },
-    {
-      id: 2,
-      title: "Deep Learning",
-      period: "Jun - Sept 2025",
-      tags: ["Education", "AI"],
-      repoUrl: "#",
-    },
-  ];
-
   const filteredExperiences = experiences.filter((exp) => {
     const matchesFilter =
       activeFilter === "all" ||
       exp.tags.some((tag) =>
-        tag.toLowerCase().includes(activeFilter.toLowerCase())
+        tag.name.toLowerCase().includes(activeFilter.toLowerCase())
       );
     const matchesSearch =
       searchTerm === "" ||
       exp.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       exp.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase())
+        tag.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     return matchesFilter && matchesSearch;
   });
@@ -56,14 +40,15 @@ export default function Home() {
         {/* Links to other social medias */}
         <div className="social-buttons">
           <a href="https://github.com/SnigdhaMah?tab=repositories">
-            <Github size={24} color="black" />
+            <IconLib.Github size={24} color="black" />
           </a>
           <a href="https://www.linkedin.com/in/snigdha-mahankali-418236241/">
-            <Linkedin size={24} color="black" />
+            <IconLib.Linkedin size={24} color="black" />
           </a>
         </div>
         {/* Actual Nav titles */}
-        <div className="nav-stuff">s
+        <div className="nav-stuff">
+          s
           <div
             className="nav-sections"
             style={{ justifyContent: "space-evenly", paddingBottom: "1%" }}
@@ -78,7 +63,10 @@ export default function Home() {
                 justifyContent: "center",
               }}
             >
-              <Star size={24} color={star == "home"? "black": "#98ffe3"} />
+              <IconLib.Star
+                size={24}
+                color={star == "home" ? "black" : "#98ffe3"}
+              />
               <button
                 onClick={() => scrollToSection("home")}
                 className="section-button"
@@ -96,7 +84,10 @@ export default function Home() {
                 justifyContent: "center",
               }}
             >
-              <Star size={24} color={star == "quick-facts"? "black": "#98ffe3"} />
+              <IconLib.Star
+                size={24}
+                color={star == "quick-facts" ? "black" : "#98ffe3"}
+              />
               <button
                 onClick={() => scrollToSection("quick-facts")}
                 className="section-button"
@@ -114,7 +105,10 @@ export default function Home() {
                 justifyContent: "center",
               }}
             >
-              <Star size={24} color={star == "experience"? "black": "#98ffe3"} />
+              <IconLib.Star
+                size={24}
+                color={star == "experience" ? "black" : "#98ffe3"}
+              />
               <button
                 onClick={() => scrollToSection("experience")}
                 className="section-button"
@@ -126,37 +120,55 @@ export default function Home() {
         </div>
       </nav>
 
-
       {/* Hero Section */}
-      <section id="home" className="pt-32 pb-20 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-6">
+      <section
+        id="home"
+        className="hero-section"
+        style={{ height: window.innerHeight * 0.9 }}
+      >
+        <div className="hero-container">
+          <h1
+            className="hero-title"
+            style={{ fontSize: window.innerWidth * 0.09 }}
+          >
             Snigdha Mahankali
           </h1>
-          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800">
-            Full-Stack Back-end
+          <h2
+            className="hero-subtitle"
+            style={{ fontSize: window.innerWidth * 0.03 }}
+          >
+            Full-Stack, Back-end
             <br />
             Software Developer
           </h2>
         </div>
       </section>
-      
+
       {/* Quick Facts Section */}
       <section
         id="quick-facts"
-        className="py-20 px-6 bg-gradient-to-br from-cyan-400 to-blue-400"
+        className="quick-facts-section"
+        style={{
+          minHeight: window.innerHeight,
+          justifyContent: "center",
+          alignContent: "center",
+        }}
       >
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-12">
-            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <h2 className="text-4xl font-bold text-white">Quick Facts</h2>
+        <div className="quick-facts-container">
+          <div className="quick-facts-header">
+            <IconLib.Star size={window.innerWidth * 0.025} color={"black"} />
+            <h2
+              className="quick-facts-title"
+              style={{ fontSize: window.innerWidth * 0.03 }}
+            >
+              Quick Facts
+            </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="facts-grid">
             {/* Education Card */}
-            <div className="bg-cyan-400 rounded-3xl p-8 text-center border-4 border-white shadow-xl">
+            <div className="fact-card">
+              {/* Grad hat svg */}
               <svg
                 className="w-12 h-12 mx-auto mb-4 text-white"
                 fill="currentColor"
@@ -164,20 +176,23 @@ export default function Home() {
               >
                 <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
               </svg>
-              <h3 className="text-2xl font-bold text-white mb-4">Education</h3>
-              <p className="text-lg font-semibold text-white mb-2">
-                University of Washington
+              <h3
+                className="fact-title"
+                style={{ fontSize: window.innerWidth * 0.02 }}
+              >
+                Education
+              </h3>
+              <p className="fact-text">University of Washington</p>
+              <p className="fact-text">
+                Bachelor&apos;s in <br />
+                Computer Science, Psychology
               </p>
-              <p className="text-white mb-2">
-                Bachelor&apos;s in Computer
-                <br />
-                Science, Psychology
-              </p>
-              <p className="text-xl font-bold text-white">3.88/4.0 GPA</p>
+              <p className="fact-text">3.88/4.0 GPA</p>
             </div>
 
             {/* Experience Card */}
-            <div className="bg-cyan-400 rounded-3xl p-8 text-center border-4 border-white shadow-xl">
+            <div className="fact-card">
+              {/* Briefcase svg */}
               <svg
                 className="w-12 h-12 mx-auto mb-4 text-white"
                 fill="currentColor"
@@ -190,102 +205,62 @@ export default function Home() {
                 />
                 <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
               </svg>
-              <h3 className="text-2xl font-bold text-white mb-4">Experience</h3>
-              <p className="text-white mb-2">
+              <h3
+                className="fact-title"
+                style={{ fontSize: window.innerWidth * 0.02 }}
+              >
+                Experience
+              </h3>
+              <p className="fact-text">
                 Three SWE Internships at
                 <br />
                 Startup / Mid-size companies
               </p>
-              <p className="text-white mb-2">Tech Lead of own startup</p>
-              <p className="text-white">Many hackathons & projects</p>
+              <p className="fact-text">Tech Lead of own startup</p>
+              <p className="fact-text">Many hackathons & projects</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Wavy Divider */}
-      <div className="relative bg-gradient-to-br from-cyan-400 to-blue-400">
-        <svg
-          className="w-full h-12"
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0,50 Q300,90 600,50 T1200,50 L1200,120 L0,120 Z"
-            fill="#7dd3fc"
-          />
-        </svg>
-      </div>
-
       {/* Experience Section */}
-      <section
-        id="experience"
-        className="py-20 px-6 bg-gradient-to-br from-cyan-300 to-cyan-400"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-12">
-            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <h2 className="text-4xl font-bold text-gray-900">
+      <section id="experience" className="experience-section">
+        <div className="experience-container">
+          <div className="quick-facts-header">
+            <IconLib.Star size={window.innerWidth * 0.025} color={"black"} />
+
+            <h2
+              className="quick-facts-title"
+              style={{ fontSize: window.innerWidth * 0.03 }}
+            >
               Explore my Experience
             </h2>
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap items-center gap-3 mb-8 max-w-4xl mx-auto">
-            <button
-              onClick={() => setActiveFilter("all")}
-              className={`px-6 py-2 rounded-full font-medium transition-all ${
-                activeFilter === "all"
-                  ? "bg-pink-300 text-gray-900"
-                  : "bg-pink-200 text-gray-700 hover:bg-pink-300"
-              }`}
-            >
-              <span className="inline-flex items-center gap-2">
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+          <div className="filters">
+            {allTags.map((tag, index) => {
+              const iconName = tag.iconName;
+              // @ts-expect-error ignore any type error
+              const Icon = IconLib[iconName];
+              return (
+                <button
+                  key={index}
+                  onClick={() => setActiveFilter(tag.name)}
+                  className={`px-6 py-2 rounded-full font-medium transition-all ${
+                    activeFilter === tag.name
+                      ? "bg-pink-300 text-gray-900"
+                      : "bg-pink-200 text-gray-700 hover:bg-pink-300"
+                  }`}
                 >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                Top Exp
-              </span>
-            </button>
-            <button
-              onClick={() => setActiveFilter("full-stack")}
-              className={`px-6 py-2 rounded-full font-medium transition-all ${
-                activeFilter === "full-stack"
-                  ? "bg-pink-300 text-gray-900"
-                  : "bg-pink-200 text-gray-700 hover:bg-pink-300"
-              }`}
-            >
-              Full-Stack
-            </button>
-            <button
-              onClick={() => setActiveFilter("back-end")}
-              className={`px-6 py-2 rounded-full font-medium transition-all ${
-                activeFilter === "back-end"
-                  ? "bg-pink-300 text-gray-900"
-                  : "bg-pink-200 text-gray-700 hover:bg-pink-300"
-              }`}
-            >
-              <span className="inline-flex items-center gap-2">
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Back-end
-              </span>
-            </button>
+                  <div className="inline-flex items-center gap-2">
+                    {Icon && <Icon size={24} color="black" />}
+                    <p>{tag.name}</p>
+                  </div>
+                </button>
+              );
+            })}
+
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
                 <input
@@ -333,16 +308,23 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   {exp.title}
                 </h3>
-                <p className="text-gray-600 mb-4">{exp.period}</p>
+                <p className="text-gray-600 mb-4">{exp.time}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {exp.tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className="px-4 py-1 bg-yellow-300 rounded-full text-sm font-medium text-gray-900"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                  {exp.tags.map((tag, idx) => {
+                    const iconName = tag.iconName;
+                    // @ts-expect-error ignore any type error
+                    const Icon = IconLib[iconName];
+
+                    return (
+                      <div
+                        key={idx}
+                        className="px-4 py-1 bg-yellow-300 rounded-full text-sm font-medium text-gray-900"
+                      >
+                        {Icon && <Icon size={24} color="black" />}
+                        <p>{tag.name}</p>
+                      </div>
+                    );
+                  })}
                 </div>
                 {exp.repoUrl && (
                   <button className="w-full py-3 bg-green-400 hover:bg-green-500 rounded-full font-semibold text-gray-900 transition-colors">
