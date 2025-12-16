@@ -241,7 +241,6 @@ export default function Home() {
           <div className="filters">
             {allTags.map((tag, index) => {
               const iconName = tag.iconName;
-              // @ts-expect-error ignore any type error
               const Icon = IconLib[iconName];
               return (
                 <button
@@ -283,9 +282,11 @@ export default function Home() {
                 </svg>
               </div>
             </div>
-          </div>
+          </div>;
 
-          {/* Wavy Divider */}
+          {
+            /* Wavy Divider */
+          }
           <div className="mb-12">
             <svg
               className="w-full h-8"
@@ -299,9 +300,11 @@ export default function Home() {
                 fill="none"
               />
             </svg>
-          </div>
+          </div>;
 
-          {/* Experience Cards */}
+          {
+            /* Experience Cards */
+          }
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {filteredExperiences.map((exp) => (
               <div key={exp.id} className="bg-white rounded-3xl p-6 shadow-lg">
@@ -312,7 +315,6 @@ export default function Home() {
                 <div className="flex flex-wrap gap-2 mb-4">
                   {exp.tags.map((tag, idx) => {
                     const iconName = tag.iconName;
-                    // @ts-expect-error ignore any type error
                     const Icon = IconLib[iconName];
 
                     return (
@@ -333,7 +335,7 @@ export default function Home() {
                 )}
               </div>
             ))}
-          </div>
+          </div>;
         </div>
       </section>
 
