@@ -20,9 +20,6 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.nav-stuff {
-}
-
 .nav-sections {
   display: flex;
   align-items: center;
@@ -51,19 +48,7 @@
   position: absolute;
   margin: "1%";
 }
-
-.home-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #1f2937;
-  transition: color 0.15s ease-in-out;
-}
-
-.home-button:hover {
-  color: #000;
-}
-
+  
 .nav-links {
   display: flex;
   align-items: center;
@@ -144,7 +129,7 @@
   margin: 0 auto;
 }
 
-.quick-facts-header {
+.header {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,7 +137,7 @@
   flex-direction: column;
 }
 
-.quick-facts-title {
+.header-title {
   font-weight: 600;
     color: black;
     font-family: Arial, Helvetica, sans-serif;
@@ -236,39 +221,12 @@
 
 .filters {
   display: flex;
-  flex-wrap: wrap;
+    flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
-  max-width: 56rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.filter-button {
-  padding: 0.5rem 1.5rem;
-  border-radius: 9999px;
-  font-weight: 500;
-  transition: all 0.15s ease-in-out;
-}
-
-.filter-button.active {
-  background-color: #f9a8d4;
-  color: #111827;
-}
-
-.filter-button:not(.active) {
-  background-color: #fce7f3;
-  color: #374151;
-}
-
-.filter-button:not(.active):hover {
-  background-color: #f9a8d4;
 }
 
 .search-container {
   flex: 1;
-  min-width: 200px;
   position: relative;
 }
 
@@ -284,16 +242,6 @@
 
 .search-input:focus {
   border-color: #f9a8d4;
-}
-
-.search-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  position: absolute;
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #4b5563;
 }
 
 .wavy-divider-small {
@@ -339,7 +287,6 @@
 .tag-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
@@ -350,6 +297,7 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: #111827;
+  flex-direction: "row";
 }
 
 .repo-button {

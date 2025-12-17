@@ -6,22 +6,26 @@ import * as IconLib from "@deemlol/next-icons";
 import { allTags, experiences } from "./data";
 
 export default function Home() {
-  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeFilter, setActiveFilter] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [star, setStar] = useState<"home" | "quick-facts" | "experience">(
+    "home"
+  );
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const filteredExperiences = experiences.filter((exp) => {
     const matchesFilter =
-      activeFilter === "all" ||
-      exp.tags.some((tag) =>
-        tag.name.toLowerCase().includes(activeFilter.toLowerCase())
-      );
-    const matchesSearch =
-      searchTerm === "" ||
-      exp.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      exp.tags.some((tag) =>
-        tag.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    return matchesFilter && matchesSearch;
+      activeFilter.length == 0 ||
+      exp.tags.some((tag) => activeFilter.includes(tag.name));
+    return matchesFilter && true;
+  });
+
+  const filteredTags = allTags.filter((tag) => {
+    return activeFilter.includes(tag.name);
+  });
+
+const searchTags = allTags.filter((tag) => {
+    return tag.name.toLocaleLowerCase().startsWith(searchTerm.toLocaleLowerCase()) || activeFilter.includes(tag.name);
   });
 
   const scrollToSection = (id: "home" | "quick-facts" | "experience") => {
@@ -29,9 +33,15 @@ export default function Home() {
     setStar(id);
   };
 
-  const [star, setStar] = useState<"home" | "quick-facts" | "experience">(
-    "home"
-  );
+  const toggleActiveFilter = (term: string) => {
+    if (activeFilter.includes(term)) {
+      // unselect
+      const newarr = activeFilter.filter((t) => t !== term);
+      setActiveFilter(newarr);
+    } else {
+      setActiveFilter([...activeFilter, term]);
+    }
+  };
 
   return (
     <div className="page-container">
@@ -155,10 +165,10 @@ export default function Home() {
         }}
       >
         <div className="quick-facts-container">
-          <div className="quick-facts-header">
+          <div className="header">
             <IconLib.Star size={window.innerWidth * 0.025} color={"black"} />
             <h2
-              className="quick-facts-title"
+              className="header-title"
               style={{ fontSize: window.innerWidth * 0.03 }}
             >
               Quick Facts
@@ -226,70 +236,124 @@ export default function Home() {
       {/* Experience Section */}
       <section id="experience" className="experience-section">
         <div className="experience-container">
-          <div className="quick-facts-header">
+          <div className="header">
             <IconLib.Star size={window.innerWidth * 0.025} color={"black"} />
 
             <h2
-              className="quick-facts-title"
+              className="header-title"
               style={{ fontSize: window.innerWidth * 0.03 }}
             >
               Explore my Experience
             </h2>
           </div>
-
           {/* Filters */}
-          <div className="filters">
-            {allTags.map((tag, index) => {
+          <div
+            className="filters"
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {filteredTags.map((tag, index) => {
               const iconName = tag.iconName;
               const Icon = IconLib[iconName];
               return (
                 <button
                   key={index}
-                  onClick={() => setActiveFilter(tag.name)}
-                  className={`px-6 py-2 rounded-full font-medium transition-all ${
-                    activeFilter === tag.name
-                      ? "bg-pink-300 text-gray-900"
-                      : "bg-pink-200 text-gray-700 hover:bg-pink-300"
-                  }`}
+                  onClick={() => toggleActiveFilter(tag.name)}
+                  className={`filter-button`}
+                  style={{
+                    marginRight: 10,
+                    borderRadius: 30,
+                    padding: 10,
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    alignItems: "center",
+                    ...(activeFilter.includes(tag.name)
+                      ? { backgroundColor: "#f9a8d4", color: "#111827" }
+                      : { backgroundColor: "#fce7f3", color: "#374151" }),
+                  }}
                 >
-                  <div className="inline-flex items-center gap-2">
-                    {Icon && <Icon size={24} color="black" />}
+                  <div
+                    className="filter-container"
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    {Icon && (
+                      <Icon
+                        size={24}
+                        color="black"
+                        style={{ marginRight: 8 }}
+                      />
+                    )}
                     <p>{tag.name}</p>
                   </div>
                 </button>
               );
             })}
 
-            <div className="flex-1 min-w-[200px]">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search Tags"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-6 py-2 pl-10 rounded-full bg-pink-100 border-2 border-pink-200 focus:outline-none focus:border-pink-300"
-                />
-                <svg
-                  className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+            <div className="search-container">
+              <div className="search-bar-overlay">
+              <input
+                type="text"
+                placeholder="Search For Relevant Tags"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => setShowDropdown(true)}
+                className="search-input"
+                style={{ color: "black" }}
+              />
+              <IconLib.Search
+                size={24}
+                color={"black"}
+                style={{ position: "absolute", top: "20%", left: "3%" }}
+              />
               </div>
-            </div>
-          </div>;
+              {showDropdown && (<div className="dropdown">
+                {searchTags.map((tag, idx) => {
+                  const iconName = tag.iconName;  
+                  const Icon = IconLib[iconName];
+                  return (
+                    <div  
 
-          {
-            /* Wavy Divider */
-          }
-          <div className="mb-12">
+                      key={idx}
+                      className="dropdown-item"
+                      onClick={() => {
+                        toggleActiveFilter(tag.name);
+                        setSearchTerm("");
+                      }}
+                      style={{
+                        ...(activeFilter.includes(tag.name)
+                          ? { backgroundColor: "#f9a8d4", color: "#111827" }
+                          : { backgroundColor: "#fce7f3", color: "#374151" }),
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-around",
+                        padding: 8,
+                      }}
+                    >
+                      {Icon && (
+                        <Icon
+                          size={20}
+                          color="black"
+                          style={{ marginRight: 8 }}
+                        />
+                      )}
+                      <p>{tag.name}</p>
+                    </div>
+                  );
+                })}
+              </div>)}
+            </div>
+          </div>
+          ;{/* Wavy Divider */}
+          <div className="wavy-divider-small">
             <svg
-              className="w-full h-8"
+              className="wavy-svg-small"
               viewBox="0 0 1200 60"
               preserveAspectRatio="none"
             >
@@ -300,19 +364,14 @@ export default function Home() {
                 fill="none"
               />
             </svg>
-          </div>;
-
-          {
-            /* Experience Cards */
-          }
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          </div>
+          ;{/* Experience Cards */}
+          <div className="experience-grid">
             {filteredExperiences.map((exp) => (
-              <div key={exp.id} className="bg-white rounded-3xl p-6 shadow-lg">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  {exp.title}
-                </h3>
-                <p className="text-gray-600 mb-4">{exp.time}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
+              <div key={exp.id} className="experience-card">
+                <h3 className="experience-title">{exp.title}</h3>
+                <p className="experience-period">{exp.time}</p>
+                <div className="tag-container">
                   {exp.tags.map((tag, idx) => {
                     const iconName = tag.iconName;
                     const Icon = IconLib[iconName];
@@ -320,29 +379,41 @@ export default function Home() {
                     return (
                       <div
                         key={idx}
-                        className="px-4 py-1 bg-yellow-300 rounded-full text-sm font-medium text-gray-900"
+                        className="tag"
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "space-around",
+                          marginRight: 8,
+                        }}
                       >
-                        {Icon && <Icon size={24} color="black" />}
+                        {Icon && (
+                          <Icon
+                            size={24}
+                            color="black"
+                            style={{ marginRight: 8 }}
+                          />
+                        )}
                         <p>{tag.name}</p>
                       </div>
                     );
                   })}
                 </div>
                 {exp.repoUrl && (
-                  <button className="w-full py-3 bg-green-400 hover:bg-green-500 rounded-full font-semibold text-gray-900 transition-colors">
-                    View Repo
-                  </button>
+                  <button className="repo-button">View Repo</button>
                 )}
               </div>
             ))}
-          </div>;
+          </div>
+          ;
         </div>
       </section>
 
       {/* Wavy Footer */}
-      <div className="relative bg-gradient-to-br from-cyan-300 to-cyan-400">
+      <div className="footer-wavy">
         <svg
-          className="w-full h-12"
+          className="footer-svg"
           viewBox="0 0 1200 120"
           preserveAspectRatio="none"
         >
