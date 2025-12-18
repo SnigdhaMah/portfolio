@@ -20,6 +20,7 @@ export const experiences: Experience[] = [
     id: 1,
     title: "SWE Intern @ ServiceNow",
     time: "Jun - Sept 2025",
+    repoUrl: "https://www.heroui.com/docs/components/dropdown",
     tags: [
       { name: "Full-Stack", iconName: "Tv" },
       { name: "Internship", iconName: "Briefcase" },
@@ -39,3 +40,13 @@ export const experiences: Experience[] = [
 
 export const allTags: Tag[] = experiences.flatMap((exp) => exp.tags);
 allTags.unshift({ name: "Top Exp", iconName: "Award" });
+
+export function getExperienceById (id: number): Experience | null {
+  console.log("getExperienceById called with id: " + id);
+  const exp = experiences.find((exp) => exp.id === id);
+  if (!exp) {
+    return null
+  }
+  console.log("getExperiencesById: " + id + " " + exp.toString());
+  return exp;
+}

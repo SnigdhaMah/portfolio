@@ -1,9 +1,11 @@
 "use client";
 
 import "./page.css";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as IconLib from "@deemlol/next-icons";
 import { allTags, experiences } from "./data";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
   const [activeFilter, setActiveFilter] = useState<string[]>([]);
@@ -12,6 +14,25 @@ export default function Home() {
     "home"
   );
   const [showDropdown, setShowDropdown] = useState(false);
+  const router = useRouter();
+  const searchBarRef = useRef<HTMLDivElement>(null);
+  const window = globalThis.window;
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(event.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const filteredExperiences = experiences.filter((exp) => {
     const matchesFilter =
@@ -24,8 +45,11 @@ export default function Home() {
     return activeFilter.includes(tag.name);
   });
 
-const searchTags = allTags.filter((tag) => {
-    return tag.name.toLocaleLowerCase().startsWith(searchTerm.toLocaleLowerCase()) || activeFilter.includes(tag.name);
+  const searchTags = allTags.filter((tag) => {
+    return (
+      tag.name.toLocaleLowerCase().startsWith(searchTerm.toLocaleLowerCase()) ||
+      activeFilter.includes(tag.name)
+    );
   });
 
   const scrollToSection = (id: "home" | "quick-facts" | "experience") => {
@@ -295,59 +319,89 @@ const searchTags = allTags.filter((tag) => {
               );
             })}
 
-            <div className="search-container">
+            <div
+              className="search-container"
+              ref={searchBarRef}
+              style={{ maxWidth: "50%" }}
+            >
               <div className="search-bar-overlay">
-              <input
-                type="text"
-                placeholder="Search For Relevant Tags"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onFocus={() => setShowDropdown(true)}
-                className="search-input"
-                style={{ color: "black" }}
-              />
-              <IconLib.Search
-                size={24}
-                color={"black"}
-                style={{ position: "absolute", top: "20%", left: "3%" }}
-              />
+                <input
+                  type="text"
+                  placeholder="Search For Relevant Tags"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onFocus={() => setShowDropdown(true)}
+                  className="search-input"
+                  style={{ color: "black" }}
+                />
+                <IconLib.Search
+                  size={24}
+                  color={"black"}
+                  style={{ position: "absolute", top: "20%", left: "1%" }}
+                />
               </div>
-              {showDropdown && (<div className="dropdown">
-                {searchTags.map((tag, idx) => {
-                  const iconName = tag.iconName;  
-                  const Icon = IconLib[iconName];
-                  return (
-                    <div  
-
-                      key={idx}
-                      className="dropdown-item"
-                      onClick={() => {
-                        toggleActiveFilter(tag.name);
-                        setSearchTerm("");
-                      }}
-                      style={{
-                        ...(activeFilter.includes(tag.name)
-                          ? { backgroundColor: "#f9a8d4", color: "#111827" }
-                          : { backgroundColor: "#fce7f3", color: "#374151" }),
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-around",
-                        padding: 8,
-                      }}
-                    >
-                      {Icon && (
-                        <Icon
-                          size={20}
-                          color="black"
-                          style={{ marginRight: 8 }}
-                        />
-                      )}
-                      <p>{tag.name}</p>
-                    </div>
-                  );
-                })}
-              </div>)}
+              {showDropdown && (
+                <div
+                  className="dropdown"
+                  style={{
+                    position: "absolute",
+                    borderRadius: 30,
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    marginTop: 4,
+                    width: "100%",
+                  }}
+                >
+                  {searchTags.map((tag, idx) => {
+                    const iconName = tag.iconName;
+                    const Icon = IconLib[iconName];
+                    return (
+                      <div
+                        key={idx}
+                        className="dropdown-item"
+                        onClick={() => {
+                          toggleActiveFilter(tag.name);
+                          setSearchTerm("");
+                        }}
+                        style={{
+                          ...(activeFilter.includes(tag.name)
+                            ? {
+                                backgroundColor: "#f9a8d4",
+                                color: "#111827",
+                                borderBottom: "1px solid #f289c3ff",
+                              }
+                            : {
+                                backgroundColor: "#fce7f3",
+                                color: "#374151",
+                                borderBottom: "1px solid #f9a8d4",
+                              }),
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          padding: 8,
+                          ...(idx === 0 && {
+                            borderTopLeftRadius: 30,
+                            borderTopRightRadius: 30,
+                          }),
+                          ...(idx === searchTags.length - 1 && {
+                            borderBottomLeftRadius: 30,
+                            borderBottomRightRadius: 30,
+                          }),
+                        }}
+                      >
+                        {Icon && (
+                          <Icon
+                            size={20}
+                            color="black"
+                            style={{ marginRight: 8 }}
+                          />
+                        )}
+                        <p>{tag.name}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
           ;{/* Wavy Divider */}
@@ -365,65 +419,96 @@ const searchTags = allTags.filter((tag) => {
               />
             </svg>
           </div>
-          ;{/* Experience Cards */}
+          {/* Experience Cards */}
           <div className="experience-grid">
             {filteredExperiences.map((exp) => (
-              <div key={exp.id} className="experience-card">
-                <h3 className="experience-title">{exp.title}</h3>
-                <p className="experience-period">{exp.time}</p>
-                <div className="tag-container">
-                  {exp.tags.map((tag, idx) => {
-                    const iconName = tag.iconName;
-                    const Icon = IconLib[iconName];
+              <Link
+                key={exp.id}
+                href={{
+                  pathname: "/experience",
+                  query: { expId: exp.id }, // 👈 pass number here
+                }}
+              >
+                <div key={exp.id} className="experience-card">
+                  <h3 className="experience-title">{exp.title}</h3>
+                  <p className="experience-period">{exp.time}</p>
+                  <div className="tag-container">
+                    {exp.tags.map((tag, idx) => {
+                      const iconName = tag.iconName;
+                      const Icon = IconLib[iconName];
 
-                    return (
-                      <div
-                        key={idx}
-                        className="tag"
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-around",
-                          marginRight: 8,
-                        }}
-                      >
-                        {Icon && (
-                          <Icon
-                            size={24}
-                            color="black"
-                            style={{ marginRight: 8 }}
-                          />
-                        )}
-                        <p>{tag.name}</p>
-                      </div>
-                    );
-                  })}
+                      return (
+                        <div
+                          key={idx}
+                          className="tag"
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-around",
+                            marginRight: 8,
+                          }}
+                        >
+                          {Icon && (
+                            <Icon
+                              size={24}
+                              color="black"
+                              style={{ marginRight: 8 }}
+                            />
+                          )}
+                          <p>{tag.name}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {exp.repoUrl && (
+                    <button
+                      className="repo-button"
+                      onClick={() => {
+                        router.push(exp.repoUrl as string);
+                      }}
+                    >
+                      View Repo
+                    </button>
+                  )}
                 </div>
-                {exp.repoUrl && (
-                  <button className="repo-button">View Repo</button>
-                )}
-              </div>
+              </Link>
             ))}
           </div>
           ;
         </div>
       </section>
 
-      {/* Wavy Footer */}
-      <div className="footer-wavy">
-        <svg
-          className="footer-svg"
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
+      <section
+        className="footer"
+        style={{
+          backgroundColor: "#01C4FD",
+          padding: "2%",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          className="contact-info"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          <path
-            d="M0,50 Q300,10 600,50 T1200,50 L1200,120 L0,120 Z"
-            fill="#ffc0cb"
-            opacity="0.5"
-          />
-        </svg>
-      </div>
+          <h1
+            className="contact-title"
+            style={{ fontWeight: 700, fontSize: 30 }}
+          >
+            Contact Me
+          </h1>
+          <p className="contact-text">snigsm@uw.edu</p>
+          <p className="footer-text">
+            © 2026 Snigdha Mahankali. All rights reserved.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
