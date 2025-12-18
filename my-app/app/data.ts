@@ -13,6 +13,10 @@ export type Experience = {
   time: string;
   tags: Tag[];
   repoUrl?: string;
+  context?: string;
+  project?: string;
+  challenges?: string;
+  tldr?: string;
 };
 
 export const experiences: Experience[] = [
@@ -32,7 +36,7 @@ export const experiences: Experience[] = [
     title: "Deep Learning",
     time: "Jun - Sept 2025",
     tags: [
-      { name: "Education", iconName: "Book" },
+      { name: "College Course", iconName: "Book" },
       { name: "AI", iconName: "Bot" },
     ],
   },

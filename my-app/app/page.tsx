@@ -82,7 +82,7 @@ export default function Home() {
         </div>
         {/* Actual Nav titles */}
         <div className="nav-stuff">
-          s
+          
           <div
             className="nav-sections"
             style={{ justifyContent: "space-evenly", paddingBottom: "1%" }}
@@ -426,7 +426,7 @@ export default function Home() {
                 key={exp.id}
                 href={{
                   pathname: "/experience",
-                  query: { expId: exp.id }, // 👈 pass number here
+                  query: { expId: exp.id },
                 }}
               >
                 <div key={exp.id} className="experience-card">
@@ -499,12 +499,16 @@ export default function Home() {
         >
           <h1
             className="contact-title"
-            style={{ fontWeight: 700, fontSize: 30 }}
+            style={{ fontWeight: 700, fontSize: 30, color: "black"}}
           >
             Contact Me
           </h1>
-          <p className="contact-text">snigsm@uw.edu</p>
-          <p className="footer-text">
+          <p className="contact-text"
+            style={{ color: "black"}}
+          >snigsm@uw.edu</p>
+          <p className="footer-text"
+            style={{ color: "black"}}
+          >
             © 2026 Snigdha Mahankali. All rights reserved.
           </p>
         </div>
