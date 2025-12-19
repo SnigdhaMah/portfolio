@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@deemlol/next-icons": "^0.1.9",
+    "@sanity/image-url": "^2.0.2",
     "next": "16.0.10",
+    "next-sanity": "^12.0.5",
     "react": "19.2.1",
     "react-dom": "19.2.1"
   },

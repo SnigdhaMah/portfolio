@@ -6,6 +6,8 @@ import * as IconLib from "@deemlol/next-icons";
 import { allTags, experiences } from "./data";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { SanityDocument } from "next-sanity";
+import { client } from "./sanity/client";
 
 export default function Home() {
   const [activeFilter, setActiveFilter] = useState<string[]>([]);
@@ -17,6 +19,7 @@ export default function Home() {
   const router = useRouter();
   const searchBarRef = useRef<HTMLDivElement>(null);
   const window = globalThis.window;
+  // const [sanity, setSanity] = useState<SanityDocument[]>([]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -27,8 +30,16 @@ export default function Home() {
         setShowDropdown(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
+
+    const getPosts = async () => {
+      const POSTS_QUERY = `*[
+      _type == "experience"
+      ]`;
+      const posts = await client.fetch<SanityDocument[]>(POSTS_QUERY, {}, {});
+      console.log(posts);
+    };
+    getPosts();
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -82,7 +93,6 @@ export default function Home() {
         </div>
         {/* Actual Nav titles */}
         <div className="nav-stuff">
-          
           <div
             className="nav-sections"
             style={{ justifyContent: "space-evenly", paddingBottom: "1%" }}
@@ -499,16 +509,14 @@ export default function Home() {
         >
           <h1
             className="contact-title"
-            style={{ fontWeight: 700, fontSize: 30, color: "black"}}
+            style={{ fontWeight: 700, fontSize: 30, color: "black" }}
           >
             Contact Me
           </h1>
-          <p className="contact-text"
-            style={{ color: "black"}}
-          >snigsm@uw.edu</p>
-          <p className="footer-text"
-            style={{ color: "black"}}
-          >
+          <p className="contact-text" style={{ color: "black" }}>
+            snigsm@uw.edu
+          </p>
+          <p className="footer-text" style={{ color: "black" }}>
             © 2026 Snigdha Mahankali. All rights reserved.
           </p>
         </div>
