@@ -2,11 +2,12 @@ import Link from "next/link";
 import { type SanityDocument } from "next-sanity";
 
 import { client } from "./sanity/client";
+import { Tag } from "./data";
 
 const POSTS_QUERY = `*[
-  _type == "post"
+  _type == "experience"
   && defined(slug.current)
-]|order(publishedAt desc)[0...12]{_id, title, slug, publishedAt}`;
+]{ _id, title, slug, tags[]->{ _id,title,iconName } }`;
 
 const options = { next: { revalidate: 30 } };
 
@@ -21,7 +22,12 @@ export default async function IndexPage() {
           <li className="hover:underline" key={post._id}>
             <Link href={`/${post.slug.current}`}>
               <h2 className="text-xl font-semibold">{post.title}</h2>
-              <p>{new Date(post.publishedAt).toLocaleDateString()}</p>
+              {post.tags.map((tag: Tag) => {
+                return (
+                  <p key={tag._id}>{tag.title}</p>
+                )
+              })}
+              {/* <p>{new Date(post.publishedAt).toLocaleDateString()}</p> */}
             </Link>
           </li>
         ))}
