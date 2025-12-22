@@ -1,41 +1,19 @@
-import Link from "next/link";
 import { type SanityDocument } from "next-sanity";
-import * as IconLib from "@deemlol/next-icons";
 import { client } from "./sanity/client";
-import { Tag } from "./data";
+import Home from "./home";
 
 const POSTS_QUERY = `*[
   _type == "experience"
   && defined(slug.current)
 ]{ _id, title, slug, tags[]->{ _id,title,iconName } }`;
 
-const options = { next: { revalidate: 30 } };
+const TAG_QUERY = `*[
+  _type == "tag"
+]{ _id,title,iconName }`;
 
 export default async function IndexPage() {
-  const posts = await client.fetch<SanityDocument[]>(POSTS_QUERY, {}, options);
-
-  return (
-    <main className="container mx-auto min-h-screen max-w-3xl p-8">
-      <h1 className="text-4xl font-bold mb-8">Posts</h1>
-      <ul className="flex flex-col gap-y-4">
-        {posts.map((post) => (
-          <li className="hover:underline" key={post._id}>
-            <Link href={`/${post.slug.current}`}>
-              <h2 className="text-xl font-semibold">{post.title}</h2>
-              {post.tags.map((tag: Tag) => {
-                const iconName = tag.iconName;
-                const IconComponent = IconLib[iconName];
-                return (
-                  <div key={tag._id} className="exp-tag">
-                    <IconComponent size={20} style={{ marginRight: 8 }} />
-                    <span>{tag.title}</span>
-                  </div>
-                );
-              })}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </main>
-  );
+  const experiences = await client.fetch<SanityDocument[]>(POSTS_QUERY, {}, {});
+  const allTags = await client.fetch<SanityDocument[]>(TAG_QUERY, {}, {});
+  
+  return <Home experiences={experiences} allTags={allTags}/>
 }
