@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { type SanityDocument } from "next-sanity";
-
+import * as IconLib from "@deemlol/next-icons";
 import { client } from "./sanity/client";
 import { Tag } from "./data";
 
@@ -23,11 +23,15 @@ export default async function IndexPage() {
             <Link href={`/${post.slug.current}`}>
               <h2 className="text-xl font-semibold">{post.title}</h2>
               {post.tags.map((tag: Tag) => {
+                const iconName = tag.iconName;
+                const IconComponent = IconLib[iconName];
                 return (
-                  <p key={tag._id}>{tag.title}</p>
-                )
+                  <div key={tag._id} className="exp-tag">
+                    <IconComponent size={20} style={{ marginRight: 8 }} />
+                    <span>{tag.title}</span>
+                  </div>
+                );
               })}
-              {/* <p>{new Date(post.publishedAt).toLocaleDateString()}</p> */}
             </Link>
           </li>
         ))}

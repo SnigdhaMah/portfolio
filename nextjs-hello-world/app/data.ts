@@ -1,12 +1,12 @@
 "use client";
 
-// import * as IconLib from "@deemlol/next-icons";
+import * as IconLib from "@deemlol/next-icons";
 import { PortableTextBlock } from "next-sanity";
 
 export type Tag = {
   _id: number;
   title: string;
-  iconName: string//keyof typeof IconLib;
+  iconName: keyof typeof IconLib;
 };
 
 export type Experience = {
