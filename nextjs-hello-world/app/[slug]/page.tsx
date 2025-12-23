@@ -1,19 +1,21 @@
 import { PortableText, type SanityDocument } from "next-sanity";
 import { client } from "../sanity/client";
+import { EXPERIENCE_QUERY } from "../sanity/query";
 import { Tag } from "../data";
 import * as IconLib from "@deemlol/next-icons";
 import "../page.css";
 
-const POST_QUERY = `*[_type == "experience" && slug.current == $slug][0]{..., tags[]->{_id,title,iconName} }`;
+import Image from 'next/image'
+import Stars from "../../assets/stars.png"
+import RightSwirl from "../../assets/right-swirl.png"
 
-const options = { next: { revalidate: 30 } };
-
-export default async function PostPage({
+export default async function ExperiencePage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const exp = await client.fetch<SanityDocument>(POST_QUERY, await params, options);
+  const exp = await client.fetch<SanityDocument>(EXPERIENCE_QUERY, await params, {});
+  console.log(exp)
 
   return (
   <div className="experience-page">
@@ -53,6 +55,8 @@ export default async function PostPage({
               );
             })}
           </div>
+          <Image src={RightSwirl} alt={"color block swirl"} height={800} style={{top: "10%", right: 0, zIndex:10, position:"absolute"}}/>
+          <Image src={Stars} alt={"stars"} height={500} style={{top: "-15%", left: "-15%", zIndex:10, position:"absolute"}}/>
   
           {/* Context Section */}
           <div className="exp-section">

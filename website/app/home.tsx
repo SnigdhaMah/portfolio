@@ -6,7 +6,6 @@ import * as IconLib from "@deemlol/next-icons";
 import { Tag, Experience } from "./data";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-// import { getExperiences, getTags } from "./sanity/sanity.query";
 
 type HomeProps= {
   experiences: Experience[];
@@ -23,8 +22,6 @@ export default function Home({experiences, allTags}: HomeProps) {
   const router = useRouter();
   const searchBarRef = useRef<HTMLDivElement>(null);
 
-  // const [expSanity, setExpSanity] = useState<Experience[]>([]);
-  // const [allTags, setAllTags] = useState<Tag[]>([]);
   const [viewport, setViewport] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
@@ -43,13 +40,8 @@ export default function Home({experiences, allTags}: HomeProps) {
         height: window.innerHeight,
       });
     };
-    // const getExp = async () => {
-    //   setExpSanity(await getExperiences());
-    //   setAllTags(await getTags());
-    // };
 
     updateSize(); // initial
-    // getExp();
     window.addEventListener("resize", updateSize);
     document.addEventListener("mousedown", handleClickOutside);
 

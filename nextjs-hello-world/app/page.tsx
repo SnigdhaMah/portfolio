@@ -1,15 +1,7 @@
 import { type SanityDocument } from "next-sanity";
 import { client } from "./sanity/client";
 import Home from "./home";
-
-const POSTS_QUERY = `*[
-  _type == "experience"
-  && defined(slug.current)
-]{ _id, title, slug, tags[]->{ _id,title,iconName } }`;
-
-const TAG_QUERY = `*[
-  _type == "tag"
-]{ _id,title,iconName }`;
+import { POSTS_QUERY, TAG_QUERY } from "./sanity/query";
 
 export default async function IndexPage() {
   const experiences = await client.fetch<SanityDocument[]>(POSTS_QUERY, {}, {});

@@ -7,17 +7,24 @@ import { Tag } from "./data";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { type SanityDocument } from "next-sanity";
+import Image from "next/image";
 
-type HomeProps= {
+import Stars from "../assets/stars.png";
+import MainSwirl from "../assets/main-swirl.png";
+import LeftSwirl from "../assets/left-swirl.png";
+import PinkSquiggle from "../assets/pink-squiggle.png";
+
+type HomeProps = {
   experiences: SanityDocument[];
   allTags: SanityDocument[];
-}
+};
 
-export default function Home({experiences, allTags}: HomeProps) {
+export default function Home({ experiences, allTags }: HomeProps) {
   const [activeFilter, setActiveFilter] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [star, setStar] = 
-    useState<"home" | "quick-facts" | "experience">("home");
+  const [star, setStar] = useState<"home" | "quick-facts" | "experience">(
+    "home"
+  );
   const [showDropdown, setShowDropdown] = useState(false);
   const router = useRouter();
   const searchBarRef = useRef<HTMLDivElement>(null);
@@ -43,7 +50,7 @@ export default function Home({experiences, allTags}: HomeProps) {
     // get initial window size for flex calc
     updateSize();
 
-    // add listeners 
+    // add listeners
     window.addEventListener("resize", updateSize);
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -60,26 +67,36 @@ export default function Home({experiences, allTags}: HomeProps) {
     return matchesFilter && true;
   });
 
-  const filteredTags: Tag[] = allTags.filter((tag) => {
-    return activeFilter.includes(tag.title);
-  }).map((tag) => ({ 
-  _id: Number(tag._id), 
-  title: tag.title as string, 
-  iconName: tag.iconName as keyof typeof IconLib }) as Tag);
-
-  const searchTags: Tag[] = allTags.filter((tag) => {
-    return (
-      tag.title
-        .toLocaleLowerCase()
-        .startsWith(searchTerm.toLocaleLowerCase()) ||
-      activeFilter.includes(tag.title)
+  const filteredTags: Tag[] = allTags
+    .filter((tag) => {
+      return activeFilter.includes(tag.title);
+    })
+    .map(
+      (tag) =>
+        ({
+          _id: Number(tag._id),
+          title: tag.title as string,
+          iconName: tag.iconName as keyof typeof IconLib,
+        }) as Tag
     );
- }) .map((tag) => ({ 
-  _id: Number(tag._id), 
-  title: tag.title as string, 
-  iconName: tag.iconName as keyof typeof IconLib }) as Tag);
 
-
+  const searchTags: Tag[] = allTags
+    .filter((tag) => {
+      return (
+        tag.title
+          .toLocaleLowerCase()
+          .startsWith(searchTerm.toLocaleLowerCase()) ||
+        activeFilter.includes(tag.title)
+      );
+    })
+    .map(
+      (tag) =>
+        ({
+          _id: Number(tag._id),
+          title: tag.title as string,
+          iconName: tag.iconName as keyof typeof IconLib,
+        }) as Tag
+    );
 
   const scrollToSection = (id: "home" | "quick-facts" | "experience") => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -205,6 +222,13 @@ export default function Home({experiences, allTags}: HomeProps) {
           </h2>
         </div>
       </section>
+      <Image
+        src={Stars}
+        alt={"stars"}
+        height={800}
+        width={800}
+        style={{ position: "absolute", top: "20%", right: "5%", zIndex: 10 }}
+      />
 
       {/* Quick Facts Section */}
       <section
@@ -284,6 +308,13 @@ export default function Home({experiences, allTags}: HomeProps) {
           </div>
         </div>
       </section>
+
+      <Image
+        src={LeftSwirl}
+        alt={"left swirl"}
+        height={900}
+        style={{ position: "absolute", top: "70%" }}
+      />
 
       {/* Experience Section */}
       <section id="experience" className="experience-section">
@@ -383,7 +414,7 @@ export default function Home({experiences, allTags}: HomeProps) {
                     const Icon = IconLib[iconName];
                     return (
                       <div
-                        key={tag._id}
+                        key={idx}
                         className="dropdown-item"
                         onClick={() => {
                           toggleActiveFilter(tag.title);
@@ -432,21 +463,13 @@ export default function Home({experiences, allTags}: HomeProps) {
             </div>
             ;
           </div>
-          ;{/* Wavy Divider */}
-          <div className="wavy-divider-small">
-            <svg
-              className="wavy-svg-small"
-              viewBox="0 0 1200 60"
-              preserveAspectRatio="none"
-            >
-              <path
-                d="M0,30 Q300,10 600,30 T1200,30"
-                stroke="#ffc0cb"
-                strokeWidth="4"
-                fill="none"
-              />
-            </svg>
-          </div>
+          {/* Wavy Divider */}
+          <Image
+            src={PinkSquiggle}
+            alt="pink squiggle divider"
+            width={viewport.width * 0.7}
+            style={{}}
+          />
           {/* Experience Cards */}
           <div className="experience-grid">
             {filteredExperiences.map((exp, index) => (
@@ -455,13 +478,13 @@ export default function Home({experiences, allTags}: HomeProps) {
                   <h3 className="experience-title">{exp.title}</h3>
                   <p className="experience-period">{exp.time}</p>
                   <div className="tag-container">
-                    {exp.tags.map((tag: Tag) => {
+                    {exp.tags.map((tag: Tag, ind: number) => {
                       const iconName = tag.iconName;
                       const Icon = IconLib[iconName];
 
                       return (
                         <div
-                          key={tag._id}
+                          key={ind}
                           className="tag"
                           style={{
                             display: "flex",
@@ -501,6 +524,9 @@ export default function Home({experiences, allTags}: HomeProps) {
         </div>
       </section>
 
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <Image src={MainSwirl} alt="color block swirl" height={500} />
+      </div>
       <section
         className="footer"
         style={{
