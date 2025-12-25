@@ -529,7 +529,6 @@ export default function Home({ experiences, allTags }: HomeProps) {
               </Link>
             ))}
           </div>
-          ;
         </div>
       </section>
 
