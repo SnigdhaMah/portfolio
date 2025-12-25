@@ -1,4 +1,6 @@
 import {defineCliConfig} from 'sanity/cli'
+import dotenv from 'dotenv'
+dotenv.config();
 
 export default defineCliConfig({
   api: {
@@ -11,5 +13,6 @@ export default defineCliConfig({
      * Learn more at https://www.sanity.io/docs/cli#auto-updates
      */
     autoUpdates: true,
+    appId: process.env.APP_ID
   }
 })

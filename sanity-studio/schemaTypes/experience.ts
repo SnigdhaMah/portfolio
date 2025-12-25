@@ -19,15 +19,26 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'time',
-      title: 'Time Period',
-      type: 'string',
+      name: 'startTime',
+      title: 'Start Time Period',
+      type: 'date',
+      options: {
+        dateFormat: 'MMM YYYY',
+      },
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'endTime',
+      title: 'End Time Period',
+      type: 'date',
+      options: {
+        dateFormat: 'MMM YYYY',
+      },
     }),
     defineField({
       name: 'repoUrl',
       title: 'Repository URL',
-      type: 'url', // optional
+      type: 'url',
     }),
     defineField({
       name: 'tags',
