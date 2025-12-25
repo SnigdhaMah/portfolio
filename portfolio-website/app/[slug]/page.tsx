@@ -15,7 +15,6 @@ export default async function ExperiencePage({
   params: Promise<{ slug: string }>;
 }) {
   const exp = await client.fetch<SanityDocument>(EXPERIENCE_QUERY, await params, {});
-  console.log(exp)
 
   return (
   <div className="experience-page">

@@ -2,7 +2,7 @@
 export const POSTS_QUERY = `*[
   _type == "experience"
   && defined(slug.current)
-]{ _id, title, slug, repoUrl, tags[]->{ _id,title,iconName } }`;
+]{ _id, title, slug, repoUrl, startTime, endTime, tags[]->{ _id,title,iconName }} | order(startTime desc, endTime desc)`;
 
 export const TAG_QUERY = `*[
   _type == "tag"

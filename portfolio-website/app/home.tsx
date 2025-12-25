@@ -113,6 +113,13 @@ export default function Home({ experiences, allTags }: HomeProps) {
     }
   };
 
+  const formatDate = (date: string) => {
+    return new Intl.DateTimeFormat("en-US", {
+                      month: "short",
+                      year: "numeric",
+                    }).format(new Date(date));
+  }
+
   return (
     <div className="page-container">
       {/* Navigation Bar */}
@@ -242,10 +249,10 @@ export default function Home({ experiences, allTags }: HomeProps) {
       >
         <div className="quick-facts-container">
           <div className="header">
-            <IconLib.Star size={window.innerWidth * 0.025} color={"black"} />
+            <IconLib.Star size={viewport.width * 0.025} color={"black"} />
             <h2
               className="header-title"
-              style={{ fontSize: window.innerWidth * 0.03 }}
+              style={{ fontSize: viewport.width * 0.03 }}
             >
               Quick Facts
             </h2>
@@ -264,7 +271,7 @@ export default function Home({ experiences, allTags }: HomeProps) {
               </svg>
               <h3
                 className="fact-title"
-                style={{ fontSize: window.innerWidth * 0.02 }}
+                style={{ fontSize: viewport.width * 0.02 }}
               >
                 Education
               </h3>
@@ -293,7 +300,7 @@ export default function Home({ experiences, allTags }: HomeProps) {
               </svg>
               <h3
                 className="fact-title"
-                style={{ fontSize: window.innerWidth * 0.02 }}
+                style={{ fontSize: viewport.width * 0.02 }}
               >
                 Experience
               </h3>
@@ -320,11 +327,11 @@ export default function Home({ experiences, allTags }: HomeProps) {
       <section id="experience" className="experience-section">
         <div className="experience-container">
           <div className="header">
-            <IconLib.Star size={window.innerWidth * 0.025} color={"black"} />
+            <IconLib.Star size={viewport.width * 0.025} color={"black"} />
 
             <h2
               className="header-title"
-              style={{ fontSize: window.innerWidth * 0.03 }}
+              style={{ fontSize: viewport.width * 0.03 }}
             >
               Explore my Experience
             </h2>
@@ -467,7 +474,7 @@ export default function Home({ experiences, allTags }: HomeProps) {
           <Image
             src={PinkSquiggle}
             alt="pink squiggle divider"
-            width={viewport.width * 0.7}
+            width={viewport.width * 0.8}
             style={{}}
           />
           {/* Experience Cards */}
@@ -476,7 +483,9 @@ export default function Home({ experiences, allTags }: HomeProps) {
               <Link key={index} href={`/${exp.slug.current}`}>
                 <div key={exp._id} className="experience-card">
                   <h3 className="experience-title">{exp.title}</h3>
-                  <p className="experience-period">{exp.time}</p>
+                  <p className="experience-period">
+                    {formatDate(exp.startTime)} - {exp.endTime ? formatDate(exp.endTime) : "Present"}
+                  </p>
                   <div className="tag-container">
                     {exp.tags.map((tag: Tag, ind: number) => {
                       const iconName = tag.iconName;
