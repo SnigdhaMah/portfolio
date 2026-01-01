@@ -56,7 +56,6 @@ export default defineType({
       name: 'project',
       title: 'Project Section',
       type: 'blockContent',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'challenges',

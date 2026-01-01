@@ -1,7 +1,7 @@
 import { PortableText, type SanityDocument } from "next-sanity";
 import { client } from "../sanity/client";
 import { EXPERIENCE_QUERY } from "../sanity/query";
-import { Tag } from "../data";
+import { Tag } from "../types";
 import * as IconLib from "@deemlol/next-icons";
 import "../page.css";
 
@@ -14,6 +14,7 @@ export default async function ExperiencePage({
 }: {
   params: { slug: string };
 }) {
+  // get the expereience from the url param slug
   const exp = await client.fetch<SanityDocument>(
     EXPERIENCE_QUERY,
     await params,
@@ -85,16 +86,14 @@ export default async function ExperiencePage({
         )}
 
         {/* My Project Section */}
-        <div className="exp-section">
-          <h2 className="exp-section-title">My Project</h2>
-          <div className="exp-section-body">
-            {Array.isArray(exp.project) ? (
+        {Array.isArray(exp.project) && (
+          <div className="exp-section">
+            <h2 className="exp-section-title">My Project</h2>
+            <div className="exp-section-body">
               <PortableText value={exp.project} />
-            ) : (
-              "Details in progress!"
-            )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Challenges Section */}
         <div className="exp-section">

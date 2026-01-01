@@ -1,8 +1,8 @@
+/* Home Page */
 .page-container {
   min-height: 100vh;
   background: #98ffe3;
 }
-
 .nav-bar {
   position: fixed;
   top: 0;
@@ -183,6 +183,20 @@
   margin-bottom: 0.5rem;
 }
 
+.pdf-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-width: 3;
+  border-radius: 10;
+  max-width: 50%;
+  margin: 0 auto;
+}
+
 .fact-highlight {
   font-size: 1.25rem;
   font-weight: 700;
@@ -229,6 +243,14 @@
   align-items: center;
 }
 
+.filter-button {
+  margin-right: 10;
+  border-radius: 30;
+  padding: 10;
+  box-shadow: "0 4px 6px rgba(0, 0, 0, 0.1)";
+  align-items: "center";
+}
+
 .search-container {
   flex: 1;
   position: relative;
@@ -242,6 +264,18 @@
   background-color: #fce7f3;
   border: 2px solid #f9a8d4;
   outline: none;
+}
+
+.dropdown { 
+  position: absolute;
+  border-radius: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 4px;
+  width: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #f9a8d4 #fce7f3;
+  max-height: 40vh;
 }
 
 .dropdown-item {
@@ -268,7 +302,8 @@
   background-color: #fff;
   border-radius: 1.5rem;
   padding: 1.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
@@ -348,7 +383,6 @@
   font-weight: 900;
   color: #1f2937;
   max-width: 70rem;
-
 }
 .exp-subtitle {
   font-size: 25;
@@ -358,9 +392,9 @@
 
 .tags-cont {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
-  flex-wrap: wrap;         
+  flex-wrap: wrap;
   margin-bottom: 30px;
   max-width: 80%;
   margin: 0 auto;

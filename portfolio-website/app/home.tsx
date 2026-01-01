@@ -1,9 +1,9 @@
-"use client";
+"use client"; // client component
 
 import "./page.css";
 import { useState, useEffect, useRef } from "react";
 import * as IconLib from "@deemlol/next-icons";
-import { Tag } from "./data";
+import { Tag } from "./types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { type SanityDocument } from "next-sanity";
@@ -17,21 +17,39 @@ import PinkSquiggle from "../assets/pink-squiggle.png";
 type HomeProps = {
   experiences: SanityDocument[];
   allTags: SanityDocument[];
+  resume: string; // sanity url
+  transcript: string; //sanity url
 };
 
-export default function Home({ experiences, allTags }: HomeProps) {
-  const [activeFilter, setActiveFilter] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [star, setStar] = useState<"home" | "quick-facts" | "experience">(
-    "home"
-  );
-  const [showDropdown, setShowDropdown] = useState(false);
+export default function Home({
+  experiences,
+  allTags,
+  resume,
+  transcript,
+}: HomeProps) {
+  /* STATE */
   const router = useRouter();
-  const searchBarRef = useRef<HTMLDivElement>(null);
+  // size of window
   const [viewport, setViewport] = useState({ width: 0, height: 0 });
+  // where the nav bar star should appear
+  const [star, setStar] = useState
+    <"home" | "quick-facts" | "experience">("home");
+  
+  // an array of tags the experiences are currently filtered on
+  const [activeFilter, setActiveFilter] = useState<string[]>([]);
+  // the string query the user typed in the text box
+  const [searchTerm, setSearchTerm] = useState("");
+  // should the search results show
+  const [showDropdown, setShowDropdown] = useState(false);
+  const searchBarRef = useRef<HTMLDivElement>(null);
 
+  /* USE EFFECTS */
   useEffect(() => {
-    /* Handle Event methods */
+    /* Handle Event Methods */
+    /**
+     * Close the search bar drop down results when the user clicks outside of the dropdown
+     * @param event 
+     */
     const handleClickOutside = (event: MouseEvent) => {
       if (
         searchBarRef.current &&
@@ -40,6 +58,10 @@ export default function Home({ experiences, allTags }: HomeProps) {
         setShowDropdown(false);
       }
     };
+
+    /**
+     * When the browser window is resized, update the variable to flex styles
+     */
     const updateSize = () => {
       setViewport({
         width: window.innerWidth,
@@ -47,7 +69,7 @@ export default function Home({ experiences, allTags }: HomeProps) {
       });
     };
 
-    // get initial window size for flex calc
+    // get initial window size for flex calculation
     updateSize();
 
     // add listeners
@@ -55,11 +77,17 @@ export default function Home({ experiences, allTags }: HomeProps) {
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
+      // remove listeners at the end
       document.removeEventListener("mousedown", handleClickOutside);
       window.removeEventListener("resize", updateSize);
     };
   }, []);
 
+  /* FILTERS */
+  /** 
+   * filter the experiences shown by what is in activeFilter
+   * if there is nothing, show all experiences 
+  */ 
   const filteredExperiences = experiences.filter((exp) => {
     const matchesFilter =
       activeFilter.length == 0 ||
@@ -67,6 +95,7 @@ export default function Home({ experiences, allTags }: HomeProps) {
     return matchesFilter && true;
   });
 
+  /** filter the tags shown by what is in activeFilter */
   const filteredTags: Tag[] = allTags
     .filter((tag) => {
       return activeFilter.includes(tag.title);
@@ -80,6 +109,7 @@ export default function Home({ experiences, allTags }: HomeProps) {
         }) as Tag
     );
 
+  /** filter the tags in dropdown by what matches the searchTerm query */
   const searchTags: Tag[] = allTags
     .filter((tag) => {
       return (
@@ -98,11 +128,19 @@ export default function Home({ experiences, allTags }: HomeProps) {
         }) as Tag
     );
 
+  /**
+   * When the user clicks a header in the nav bar, move the star and scroll to that section 
+   * @param id 
+   */
   const scrollToSection = (id: "home" | "quick-facts" | "experience") => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setStar(id);
   };
 
+  /**
+   * On Select this tag, either add to active filter if it was not there, or remove it
+   * @param term 
+   */
   const toggleActiveFilter = (term: string) => {
     if (activeFilter.includes(term)) {
       // unselect
@@ -113,12 +151,17 @@ export default function Home({ experiences, allTags }: HomeProps) {
     }
   };
 
+  /**
+   * Format date in MMM - YYYY form 
+   * @param date 
+   * @returns 
+   */
   const formatDate = (date: string) => {
     return new Intl.DateTimeFormat("en-US", {
-                      month: "short",
-                      year: "numeric",
-                    }).format(new Date(date));
-  }
+      month: "short",
+      year: "numeric",
+    }).format(new Date(date));
+  };
 
   return (
     <div className="page-container">
@@ -206,7 +249,7 @@ export default function Home({ experiences, allTags }: HomeProps) {
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Name Section */}
       <section
         id="home"
         className="hero-section"
@@ -229,11 +272,11 @@ export default function Home({ experiences, allTags }: HomeProps) {
           </h2>
         </div>
       </section>
+      
       <Image
         src={Stars}
         alt={"stars"}
-        height={800}
-        width={800}
+        width={viewport.width * 0.45}
         style={{ position: "absolute", top: "20%", right: "5%", zIndex: 10 }}
       />
 
@@ -281,6 +324,21 @@ export default function Home({ experiences, allTags }: HomeProps) {
                 Computer Science, Psychology
               </p>
               <p className="fact-text">3.88/4.0 GPA</p>
+              <Link
+                href={`${transcript}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="pdf-button">
+                  <IconLib.FileText
+                    size={viewport.width * 0.02}
+                    color="white"
+                  />
+                  <p className="fact-text" style={{ margin: 0 }}>
+                    Transcript
+                  </p>
+                </div>
+              </Link>
             </div>
 
             {/* Experience Card */}
@@ -311,6 +369,21 @@ export default function Home({ experiences, allTags }: HomeProps) {
               </p>
               <p className="fact-text">Tech Lead of own startup</p>
               <p className="fact-text">Many hackathons & projects</p>
+              <Link
+                href={`${resume}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="pdf-button">
+                  <IconLib.FileText
+                    size={viewport.width * 0.02}
+                    color="white"
+                  />
+                  <p className="fact-text" style={{ margin: 0 }}>
+                    Resume
+                  </p>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -319,7 +392,7 @@ export default function Home({ experiences, allTags }: HomeProps) {
       <Image
         src={LeftSwirl}
         alt={"left swirl"}
-        height={900}
+        height={viewport.width * 0.5}
         style={{ position: "absolute", top: "70%" }}
       />
 
@@ -336,7 +409,7 @@ export default function Home({ experiences, allTags }: HomeProps) {
               Explore my Experience
             </h2>
           </div>
-          {/* Filters */}
+          {/* Active Filters */}
           <div
             className="filters"
             style={{
@@ -353,11 +426,6 @@ export default function Home({ experiences, allTags }: HomeProps) {
                   onClick={() => toggleActiveFilter(tag.title)}
                   className={`filter-button`}
                   style={{
-                    marginRight: 10,
-                    borderRadius: 30,
-                    padding: 10,
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                    alignItems: "center",
                     ...(activeFilter.includes(tag.title)
                       ? { backgroundColor: "#f9a8d4", color: "#111827" }
                       : { backgroundColor: "#fce7f3", color: "#374151" }),
@@ -384,6 +452,7 @@ export default function Home({ experiences, allTags }: HomeProps) {
                 </button>
               );
             })}
+            {/* Search Bar */}
             <div
               className="search-container"
               ref={searchBarRef}
@@ -405,15 +474,12 @@ export default function Home({ experiences, allTags }: HomeProps) {
                   style={{ position: "absolute", top: "20%", left: "1%" }}
                 />
               </div>
+              {/* Dropdown */}
               {showDropdown && (
                 <div
                   className="dropdown"
                   style={{
-                    position: "absolute",
-                    borderRadius: 30,
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                    marginTop: 4,
-                    width: "100%",
+                    maxHeight: viewport.height * 0.4
                   }}
                 >
                   {searchTags.map((tag: Tag, idx) => {
@@ -468,7 +534,6 @@ export default function Home({ experiences, allTags }: HomeProps) {
                 </div>
               )}
             </div>
-            ;
           </div>
           {/* Wavy Divider */}
           <Image
@@ -484,7 +549,8 @@ export default function Home({ experiences, allTags }: HomeProps) {
                 <div key={exp._id} className="experience-card">
                   <h3 className="experience-title">{exp.title}</h3>
                   <p className="experience-period">
-                    {formatDate(exp.startTime)} - {exp.endTime ? formatDate(exp.endTime) : "Present"}
+                    {formatDate(exp.startTime)} -{" "}
+                    {exp.endTime ? formatDate(exp.endTime) : "Present"}
                   </p>
                   <div className="tag-container">
                     {exp.tags.map((tag: Tag, ind: number) => {
