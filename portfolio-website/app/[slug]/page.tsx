@@ -96,28 +96,24 @@ export default async function ExperiencePage({
         )}
 
         {/* Challenges Section */}
-        <div className="exp-section">
-          <h2 className="exp-section-title">Challenges</h2>
-          <div className="exp-section-body">
-            {Array.isArray(exp.challenges) ? (
+        {Array.isArray(exp.challenges) && (
+          <div className="exp-section">
+            <h2 className="exp-section-title">Challenges</h2>
+            <div className="exp-section-body">
               <PortableText value={exp.challenges} />
-            ) : (
-              "Details in progress!"
-            )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Final Product Section */}
-        <div className="exp-section">
-          <h2 className="exp-section-title">TLDR</h2>
-          <div className="exp-section-body">
-            {Array.isArray(exp.tldr) ? (
+        {Array.isArray(exp.tldr) && (
+          <div className="exp-section">
+            <h2 className="exp-section-title">TLDR</h2>
+            <div className="exp-section-body">
               <PortableText value={exp.tldr} />
-            ) : (
-              "Details in progress!"
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <Image
         src={RightSwirl}

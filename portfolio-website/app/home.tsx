@@ -32,11 +32,12 @@ export default function Home({
   // size of window
   const [viewport, setViewport] = useState({ width: 0, height: 0 });
   // where the nav bar star should appear
-  const [star, setStar] = useState
-    <"home" | "quick-facts" | "experience">("home");
-  
+  const [star, setStar] = useState<"home" | "quick-facts" | "experience">(
+    "home"
+  );
+
   // an array of tags the experiences are currently filtered on
-  const [activeFilter, setActiveFilter] = useState<string[]>([]);
+  const [activeFilter, setActiveFilter] = useState<string[]>(["Top Exp"]);
   // the string query the user typed in the text box
   const [searchTerm, setSearchTerm] = useState("");
   // should the search results show
@@ -48,7 +49,7 @@ export default function Home({
     /* Handle Event Methods */
     /**
      * Close the search bar drop down results when the user clicks outside of the dropdown
-     * @param event 
+     * @param event
      */
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -84,10 +85,10 @@ export default function Home({
   }, []);
 
   /* FILTERS */
-  /** 
+  /**
    * filter the experiences shown by what is in activeFilter
-   * if there is nothing, show all experiences 
-  */ 
+   * if there is nothing, show all experiences
+   */
   const filteredExperiences = experiences.filter((exp) => {
     const matchesFilter =
       activeFilter.length == 0 ||
@@ -115,7 +116,7 @@ export default function Home({
       return (
         tag.title
           .toLocaleLowerCase()
-          .startsWith(searchTerm.toLocaleLowerCase()) ||
+          .includes(searchTerm.toLocaleLowerCase()) ||
         activeFilter.includes(tag.title)
       );
     })
@@ -129,8 +130,8 @@ export default function Home({
     );
 
   /**
-   * When the user clicks a header in the nav bar, move the star and scroll to that section 
-   * @param id 
+   * When the user clicks a header in the nav bar, move the star and scroll to that section
+   * @param id
    */
   const scrollToSection = (id: "home" | "quick-facts" | "experience") => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -139,7 +140,7 @@ export default function Home({
 
   /**
    * On Select this tag, either add to active filter if it was not there, or remove it
-   * @param term 
+   * @param term
    */
   const toggleActiveFilter = (term: string) => {
     if (activeFilter.includes(term)) {
@@ -152,9 +153,9 @@ export default function Home({
   };
 
   /**
-   * Format date in MMM - YYYY form 
-   * @param date 
-   * @returns 
+   * Format date in MMM - YYYY form
+   * @param date
+   * @returns
    */
   const formatDate = (date: string) => {
     return new Intl.DateTimeFormat("en-US", {
@@ -169,10 +170,16 @@ export default function Home({
       <nav className="nav-bar">
         {/* Links to other social medias */}
         <div className="social-buttons">
-          <a href="https://github.com/SnigdhaMah?tab=repositories">
+          <a
+            href="https://github.com/SnigdhaMah?tab=repositories"
+            rel="noopener noreferrer"
+          >
             <IconLib.Github size={24} color="black" />
           </a>
-          <a href="https://www.linkedin.com/in/snigdha-mahankali-418236241/">
+          <a
+            href="https://www.linkedin.com/in/snigdha-mahankali-418236241/"
+            rel="noopener noreferrer"
+          >
             <IconLib.Linkedin size={24} color="black" />
           </a>
         </div>
@@ -272,7 +279,7 @@ export default function Home({
           </h2>
         </div>
       </section>
-      
+
       <Image
         src={Stars}
         alt={"stars"}
@@ -479,7 +486,7 @@ export default function Home({
                 <div
                   className="dropdown"
                   style={{
-                    maxHeight: viewport.height * 0.4
+                    maxHeight: viewport.height * 0.4,
                   }}
                 >
                   {searchTags.map((tag: Tag, idx) => {

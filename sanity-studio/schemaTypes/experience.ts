@@ -61,7 +61,6 @@ export default defineType({
       name: 'challenges',
       title: 'Challenges Section',
       type: 'blockContent',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'tldr',
